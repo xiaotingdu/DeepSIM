@@ -1,6 +1,6 @@
 
 #-*- coding: utf-8 -*-
-from function_new import MUL_CNN_preprocess, MUL_CNN
+from function_smote import MUL_CNN_preprocess, MUL_CNN
 import os
 #only dispay warning and error
 os.environ["TF_CPP_MIN_LOG_LEVEL"]='2'
