@@ -1,5 +1,5 @@
 #-*- coding: utf-8 -*-
-from function_new import CNN_preprocess, CNN
+from function_smote import CNN_preprocess, CNN
 import os
 import numpy as np
 #only dispay warning and error
