@@ -11,11 +11,11 @@ from keras import backend as K
 n_dim = 500
 
 #get the file path
-x_path = '../bugreports_classification/linux1/summary/multiclass_linux1_arb_s.txt'
-y_path = '../bugreports_classification/linux1/summary/multiclass_linux1_arb_label_s.txt'
+x_path = ''
+y_path = ''
 
-model_path = '../model_dxt/dimension/bugreport-vectors-gensim-sg500d_5w_5m.bin'
-save_path = '../output/word2vec_cnn/linux1/linux1_cnn_arbsubtypes_s.txt'
+model_path = ''
+save_path = ''
 
 x, y, y_kinds=MUL_CNN_preprocess(n_dim,x_path, y_path, model_path, step_rate=0.2)
 
