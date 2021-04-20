@@ -66,23 +66,13 @@ def build_matrix(dimension,x, padding_size, model):
 		matrix = []
 		for i in range(padding_size):
 			try:
-				#print (model[sen[i]])
 				matrix.append(model[sen[i]])
 			except:
-				# 这里有两种except情况，
-				# 1. 这个单词找不到
-				# 2. sen没那么长
-				# 不管哪种情况，我们直接贴上全是0的vec
 				matrix.append([0] *dimension)
-		#print (type(matrix))
 		res.append(matrix)
-	#print (type(res))
 	return res
 
 def y_dataset_process(y):
-	"""
-    process y into [0,1]
-    """
 	y_processed = np.zeros([y.shape[0], 2])
 	for i in range(len(y)):
 		if (y[i] == 1):
@@ -139,26 +129,14 @@ def score(y_pre, y_test):
 	average_f1_score = (1.0 * f1_score_n * sum(cm[:, 0]) + 1.0 * f1_score_p * sum(cm[:, 1])) / (
 				sum(cm[0, :]) + sum(cm[1, :]))
 	
-	# print("accuracy=%.4f" % accuracy)
-	# print("precision_p=%.4f" % precision_p)
-	# print("precision_n=%.4f" % precision_n)
-	# print("recall_p=%.4f" % recall_p)
-	# print("recall_n=%.4f" % recall_n)
-	# print("f1_score_p=%.4f" % f1_score_p)
-	# print("f1_score_n=%.4f" % f1_score_n)
-	# print("average_precision=%.4f" % average_precision)
-	# print("average_recall=%.4f" % average_recall)
-	# print("average_f1_score=%.4f" % average_f1_score)
 	
 	result = str("%.4f" % accuracy) + '\t' + str("%.4f" % precision_p) + '\t' + str("%.4f" % recall_p) + '\t' + str(
 		"%.4f" % f1_score_p) + '\t' + str("%.4f" % precision_n) + '\t' + str("%.4f" % recall_n) + '\t' + str(
 		"%.4f" % f1_score_n) + '\t' + str("%.4f" % average_precision) + '\t' + str(
 		"%.4f" % average_recall) + '\t' + str("%.4f" % average_f1_score)
 	return result
+
 def deprocess(y):
-	"""
-    deprocess y into [1]
-    """
 	y_deprocessed = np.zeros([y.shape[0], 1])
 	for i in range(len(y)):
 		if (y[i] == [1, 0]).all():
@@ -168,36 +146,6 @@ def deprocess(y):
 	return y_deprocessed
 
 
-#def data_expend(x_pos, x_neg, step_rate):
-	# if (len(x_pos) > len(x_neg)):
-	# 	short = x_neg
-	# 	rate = round(len(x_pos) / len(x_neg)) - 1
-	# 	for i in range(rate):
-	# 		r = np.random.random((short.shape[0], short.shape[1], short.shape[2]))
-	# 		r = (r * 2 - 1) / (1/step_rate)
-	# 		x_neg = np.concatenate((x_neg, short + np.multiply(short, r)))
-	# if (len(x_neg) > len(x_pos)):
-	# 	short = x_pos
-	# 	rate = round(len(x_neg) / len(x_pos)) - 1
-	# 	for i in range(rate):
-	# 		r = np.random.random((short.shape[0], short.shape[1], short.shape[2]))
-	# 		r = (r * 2 - 1) /(1/step_rate)
-	# 		x_pos = np.concatenate((x_pos, short + np.multiply(short, r)))
-		# x_pos=np.concatenate((x_pos, short+r))
-	#    if(len(x_pos)<200 or len(x_neg)<200):
-	#        temp_pos=x_pos
-	#        temp_neg=x_neg
-	#        rate=round(200/len(x_pos))
-	#        for i in range(rate):
-	#            r_pos=np.random.random((temp_pos.shape[0], temp_pos.shape[1], temp_pos.shape[2]))
-	#            r_neg=np.random.random((temp_neg.shape[0], temp_neg.shape[1], temp_neg.shape[2]))
-	#            r_pos=(r_pos*2-1)/10
-	#            r_neg=(r_neg*2-1)/10
-	#            x_pos=np.concatenate((x_pos, temp_pos+np.multiply(temp_pos, r_pos)))
-	#            x_neg=np.concatenate((x_neg, temp_neg+np.multiply(temp_neg, r_neg)))
-	##            x_pos=np.concatenate((x_pos, temp_pos+r_pos))
-	##            x_neg=np.concatenate((x_neg, temp_neg+r_neg))
-	# return x_pos, x_neg
 
 def CNN_preprocess(dimension,pos_path, neg_path, model_path, step_rate=0.2):
 	pos_reports = load_reports(pos_path)
@@ -243,19 +191,7 @@ def MUL_CNN_preprocess(dimension,x_path, y_path, model_path, step_rate=0.2):
 	x = build_matrix(dimension,x_reports, padding_size, model_word)
 	# get the y_kinds
 	y_kinds, encode = LabelProcess(y_reports)#encode 是不同种类的编码
-	# balance the data
-	# num = np.zeros([len(y_kinds), 1])#存放不同种类的数目
-	# rate = np.zeros([len(y_kinds), 1])#存放需要扩展的比率
-	#
-	# for i in range(len(y_kinds)):
-	# 	num[i] = y_reports.count(y_kinds[i])
-	#
-	# maxnum = num.max()
-	# # rate
-	# for i in range(len(y_kinds)):
-	# 	rate[i] = round(maxnum / num[i][0]) - 1
-	
-	# y
+
 	y = []
 	for w in y_reports:
 		y.append(y_kinds.index(w))
@@ -282,19 +218,7 @@ def MUL_CNN_preprocess(dimension,x_path, y_path, model_path, step_rate=0.2):
 	for w in y_exp:
 		y.append(encode[w])
 	y = np.array(y)
-	# Expend
-	# for i in range(len(y)):
-	# 	index = np.argmax(y[i])
-	# 	expend_rate = rate[index][0]
-	# 	for j in range(int(expend_rate)):
-	# 		y.append(y[i])
-	# 		r = np.random.random((len(x[1]), dimension))
-	# 		r = (r * 2 - 1)/(1/step_rate)
-	# 		temp = x[i] + np.multiply(x[i], r)
-	# 		x.append(temp)
-	#
-	# y = np.array(y)
-	# x = np.array(x)
+
 	return x, y, y_kinds
 def CNN(dimension,x_dataset, y_dataset, batch_size=64, n_filter=32,
         filter_length=3, nb_epoch=15, n_pool=3,padding_size = 10 ):
@@ -304,8 +228,7 @@ def CNN(dimension,x_dataset, y_dataset, batch_size=64, n_filter=32,
 	#### over_sampling
 	result_list = []
 	from imblearn.over_sampling import SMOTE
-	smo = SMOTE()
-	
+	smo = SMOTE()	
 	x_train_dup = []
 	for matrix in x_train:
 		x_train_dup.append(np.reshape(matrix, (x_train.shape[1] * x_train.shape[2])))
@@ -327,9 +250,6 @@ def CNN(dimension,x_dataset, y_dataset, batch_size=64, n_filter=32,
 	x_train = np.array(x_train)
 
 	# build CNN
-	#print (x_train.shape[0])
-	#print (x_train.shape[1])
-	#print (len(x_train))
 	model = Sequential()
 	print (x_train.shape[1])
 	model.add(Convolution1D(n_filter, filter_length,
