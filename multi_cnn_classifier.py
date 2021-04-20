@@ -6,16 +6,15 @@ import os
 os.environ["TF_CPP_MIN_LOG_LEVEL"]='2'
 import tensorflow as tf
 from keras import backend as K
-#window = 5 
-#min_count=5
+
 n_dim = 500
 
 #get the file path
-x_path = ''
-y_path = ''
+x_path = 'This is the path of bug reports to be classified'
+y_path = 'This is the path of labels of bug reports'
 
-model_path = ''
-save_path = ''
+model_path = 'This is the path of the semantic model'
+save_path = 'This is the path of result saving file'
 
 x, y, y_kinds=MUL_CNN_preprocess(n_dim,x_path, y_path, model_path, step_rate=0.2)
 
@@ -25,16 +24,6 @@ for i in range(100):
 	#try:	
 	result=MUL_CNN(n_dim,x, y, y_kinds, batch_size=512, n_filter=32,
         filter_length=5, nb_epoch=50, n_pool=3)
-	#MUL_CNN(dimension,x, y, y_kinds, batch_size=64, n_filter=32,
-    #    filter_length=5, nb_epoch=15, n_pool=3)
-	print (result)
-	# CNN(x_dataset, y_dataset, batch_size=64, n_filter=32,
-	#filter_length=5, nb_epoch=15, n_pool=3):
-	#batch_size：每次送进网络训练的数据数量
-	#n_filter：训练所用的卷积核的数目
-	#filter_length:卷积核的宽度（长度为350，默认为单词的向量长度）
-	#nb_epoch:数据训练的总轮数
-	#n_pool=3：池化层的宽度
 	f_save.write(result+'\n')
 	K.clear_session()
 	tf.reset_default_graph()
